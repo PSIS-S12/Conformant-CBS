@@ -195,7 +195,7 @@ class ODState:
 
         path_min_cost = path[-1][1][0]
         path_max_cost = path[-1][1][1]
-        for i in reversed(range(len(path)-1)):
+        for i in reversed(range(len(path) - 1)):
             if path[i][0] != goal:
                 break
 
@@ -217,7 +217,8 @@ class ODState:
         curr_node = self
         # ToDO: Make sure all agents are safe, i.e we went so far back that their max time is less than the min time of
         # The operation being tested.
-        safe_agents = {new_op.agent}  # Agents who cannot conflict with the new operation. Starts with only the moving agent
+        safe_agents = {
+            new_op.agent}  # Agents who cannot conflict with the new operation. Starts with only the moving agent
 
         while curr_node:
             # We aren't interested in nodes that were reached by operations performed by the current moving agent
@@ -249,11 +250,12 @@ class ODState:
         new_op_start_time = self.curr_positions[new_op.agent]['time']
 
         for agent, position in self.curr_positions.items():
-            new_op_time = (new_op_start_time[0], new_op.time[1]-1)
+            new_op_time = (new_op_start_time[0], new_op.time[1] - 1)
             curr_op_start = self.prev_node.curr_positions[curr_op.agent]['time'][0]
-            prev_op_time = (curr_op_start, curr_op.time[1]-1)
+            prev_op_time = (curr_op_start, curr_op.time[1] - 1)
             if agent != new_op.agent and self.overlapping(new_op_time, prev_op_time) and (
-                curr_op.edge == new_op.edge or (curr_op.edge[0] == new_op.edge[1] and curr_op.edge[1] == new_op.edge[0])):
+                    curr_op.edge == new_op.edge or (
+                    curr_op.edge[0] == new_op.edge[1] and curr_op.edge[1] == new_op.edge[0])):
                 return True
         return False
 
@@ -334,9 +336,9 @@ class ODState:
         return key_tuple
 
         if self.prev_op:
-            return key_tuple + (self.prev_op.agent, )
+            return key_tuple + (self.prev_op.agent,)
         else:
-            return key_tuple + (0, )
+            return key_tuple + (0,)
 
     def copy_and_update_positions(self, agent_to_move, op):
         """

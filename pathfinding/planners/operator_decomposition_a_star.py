@@ -5,11 +5,12 @@ uncertainty.
 
 - Tomer Shahar, 2019
 """
-from pathfinding.planners.utils.time_error import OutOfTimeError
-from pathfinding.planners.utils.custom_heap import OpenListHeap
-from pathfinding.planners.utils.operator_decomp_state import ODState
 import math
 import time
+
+from pathfinding.planners.utils.custom_heap import OpenListHeap
+from pathfinding.planners.utils.operator_decomp_state import ODState
+from pathfinding.planners.utils.time_error import OutOfTimeError
 
 STAY_STILL_COST = 1
 
@@ -160,4 +161,3 @@ class ODAStar:
         Returns true if the new state has a better worst-case than the old node.
         """
         return new_node.g_val[1] < old_node.g_val[1]
-

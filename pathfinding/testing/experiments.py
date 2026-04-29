@@ -3,9 +3,10 @@ File for running some experiments.
 """
 import os.path
 import sys
+from shutil import copyfile
+
 from pathfinding.planners.operator_decomposition_a_star import *
 from pathfinding.simulator import *
-from shutil import copyfile
 
 proj_path = os.path.abspath(os.getcwd())
 proj_path = proj_path.split('Conformant-CBS')
@@ -183,8 +184,8 @@ class Experiments:
                 oda_nodes = -1
             with open(os.path.join(self.output_folder, results_file), 'a') as map_result_file:
                 results = f'{i + 1},{map_seed},{agent_num}, {agent_seed}, {self.uncertainty},{self.time_limit},' \
-                    f'{ccbs_time}, {oda_queue_time}, {ccbs_min}, {ccbs_max}, {oda_min}, {oda_max},' \
-                    f' {ccbs_nodes_expanded}, {oda_nodes}\n'
+                          f'{ccbs_time}, {oda_queue_time}, {ccbs_min}, {ccbs_max}, {oda_min}, {oda_max},' \
+                          f' {ccbs_nodes_expanded}, {oda_nodes}\n'
                 map_result_file.write(results)
 
         # Write final results.
@@ -207,9 +208,9 @@ class Experiments:
             map_result_file.write(header)
             ccbs_ratio, oda_queue_ratio = self.calc_ratio(ccbs_total_time, oda_queue_total_time)
             results = f'CCBS, {ccbs_total_time},' \
-                f' {ccbs_success * 100}%, {ccbs_cost[0]} to {ccbs_cost[1]}, {ccbs_ratio}\n'
+                      f' {ccbs_success * 100}%, {ccbs_cost[0]} to {ccbs_cost[1]}, {ccbs_ratio}\n'
             results += f'ODA-queue, {oda_queue_total_time}, {oda_queue_success * 100}%, {oda_queue_cost[0]} to' \
-                f' {oda_queue_cost[1]}, {oda_queue_ratio}\n'
+                       f' {oda_queue_cost[1]}, {oda_queue_ratio}\n'
             map_result_file.write(results)
 
     @staticmethod
@@ -354,7 +355,7 @@ class Experiments:
                     init_sol = sim.online_planner.initial_plan
                     init_time = sim.online_planner.initial_plan.time_to_solve
                     init_sol.save(self.agents_num, self.uncertainty, map_type, agent_seed, map_seed, self.min_best_case,
-                                   use_pc, use_bp, sol_folder)
+                                  use_pc, use_bp, sol_folder)
                 octu_cost = -1, -1
                 init_cost = -1, -1
                 octu_time = -1
@@ -369,31 +370,31 @@ class Experiments:
             with open(temp_path, 'a') as temp_map_result_file:
                 objective = 'Min Best Case' if self.min_best_case else 'Min Worst Case'
                 results = f'{i + 1},' \
-                    f'{map_seed},' \
-                    f'{self.agents_num},' \
-                    f'{agent_seed},' \
-                    f'{self.uncertainty},' \
-                    f'{use_pc},' \
-                    f'{use_bp},' \
-                    f'{self.time_limit},' \
-                    f'{init_time},' \
-                    f'{octu_time},' \
-                    f'{init_cost[0]},' \
-                    f'{init_cost[1]},' \
-                    f'{init_tu},' \
-                    f'{init_true_cost},' \
-                    f'{init_sol.nodes_generated},' \
-                    f'{octu_cost[0]},' \
-                    f'{octu_cost[1]},' \
-                    f'{octu_tu},' \
-                    f'{final_true_cost},' \
-                    f'{sensing_prob},' \
-                    f'{dist},' \
-                    f'{objective},' \
-                    f'{communication},' \
-                    f'{min_sic},' \
-                    f'{max_sic},' \
-                    f'{true_sic}\n'
+                          f'{map_seed},' \
+                          f'{self.agents_num},' \
+                          f'{agent_seed},' \
+                          f'{self.uncertainty},' \
+                          f'{use_pc},' \
+                          f'{use_bp},' \
+                          f'{self.time_limit},' \
+                          f'{init_time},' \
+                          f'{octu_time},' \
+                          f'{init_cost[0]},' \
+                          f'{init_cost[1]},' \
+                          f'{init_tu},' \
+                          f'{init_true_cost},' \
+                          f'{init_sol.nodes_generated},' \
+                          f'{octu_cost[0]},' \
+                          f'{octu_cost[1]},' \
+                          f'{octu_tu},' \
+                          f'{final_true_cost},' \
+                          f'{sensing_prob},' \
+                          f'{dist},' \
+                          f'{objective},' \
+                          f'{communication},' \
+                          f'{min_sic},' \
+                          f'{max_sic},' \
+                          f'{true_sic}\n'
                 temp_map_result_file.write(results)
 
         copyfile(temp_path, final_results_path)
@@ -416,9 +417,8 @@ class Experiments:
                                                         use_pc=use_pc, use_bp=use_bp, maps=maps)
 
 
-def run_experiments(u=(0, 1, 2, 4), agents=(8, ), sense_prob=(0, 100), edge_dist=('min', 'max', 'uni', ), reps=100,
-                    comm_mode=(True, False), mbc=(True, False), pc=(True, ), bp=(False, ), maps=('small_blank_map', )):
-
+def run_experiments(u=(0, 1, 2, 4), agents=(8,), sense_prob=(0, 100), edge_dist=('min', 'max', 'uni',), reps=100,
+                    comm_mode=(True, False), mbc=(True, False), pc=(True,), bp=(False,), maps=('small_blank_map',)):
     exp = Experiments()
 
     for uncertainty in u:
@@ -429,4 +429,4 @@ def run_experiments(u=(0, 1, 2, 4), agents=(8, ), sense_prob=(0, 100), edge_dist
 
     print("Finished Experiments")
 
-#run_experiments()
+# run_experiments()

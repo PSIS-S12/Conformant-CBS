@@ -1,8 +1,7 @@
 import csv
-import pandas as pd
 import os
 
-#from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
+# from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
 
 raw_data_file = 'C:\\Users\\Tomer\\PycharmProjects\\Conformant-CBS\\experiments\\All Raw Online Data.csv'
 average_results_file = 'C:\\Users\\Tomer\\PycharmProjects\\Conformant-CBS\\experiments\\Average Online Results.csv'
@@ -43,7 +42,7 @@ def append_simulation_file(file):
                 return
             if 10737296 > int(row['Agents Seed']) or int(row['Agents Seed']) > 10737345:
                 print(f'Wrong agent seed, FILE: {file}')
-                #return
+                # return
             dist = file.split('distribution - ')[1].split(' -')[0]
             if dist != row['Distribution']:
                 print(run_file)
@@ -197,7 +196,7 @@ def write_average_results(run_file):
                 else:
                     same_tc += 1
 
-        calc_averages_and_write(map_type, bp, pc, initial_time,  online_time, initial_min_cost, initial_max_cost,
+        calc_averages_and_write(map_type, bp, pc, initial_time, online_time, initial_min_cost, initial_max_cost,
                                 initial_uncertainty, initial_true_cost, final_min_cost, final_max_cost,
                                 final_uncertainty, final_true_cost, objective, uncertainty, sensing_probability,
                                 num_of_agents, num_of_runs, octu_success, comm, distribution, reduced_tc, increased_tc,
@@ -205,7 +204,6 @@ def write_average_results(run_file):
 
 
 def write_simulation_results(map_type, row, dist=None):
-
     tc_change = int(row['initial true cost']) - int(row['final true cost'])
     if tc_change > 0:
         effect = 'Increased True Cost'
@@ -253,7 +251,8 @@ def write_simulation_results(map_type, row, dist=None):
 with open(raw_data_file, 'w', newline='') as raw_file:
     fields = ['Map', 'Map Seed', 'Uncertainty', 'Number of Agents', 'Agent Seed', 'With BP', 'With PC',
               'With Communication', 'Sensing Probability', 'Initial Runtime (secs)', 'Online Runtime (secs)', 'Success',
-              'Nodes Generated Initially', 'Initial Min SOC', 'Initial Max SOC', 'Initial Uncertainty', 'Initial True Cost',
+              'Nodes Generated Initially', 'Initial Min SOC', 'Initial Max SOC', 'Initial Uncertainty',
+              'Initial True Cost',
               'Final Min SOC', 'Final Max SOC', 'Final Uncertainty', 'Distribution', 'Final True Cost', 'Objective',
               'Effect on True Cost', 'True Cost Change', 'Min SIC', 'Max SIC']
     raw_data_writer = csv.DictWriter(raw_file, fieldnames=fields, restval='-', extrasaction='ignore')
@@ -274,7 +273,7 @@ with open(average_results_file, 'w', newline='') as avg_file:
                   'Sensing Probability', 'Initial Runtime (secs)', 'Online Runtime (secs)', 'Success',
                   'Nodes Generated Initially', 'Initial Min SOC', 'Initial Max SOC', 'Initial Uncertainty',
                   'Initial True Cost', 'Final Min SOC', 'Final Max SOC', 'Final Uncertainty', 'Final True Cost',
-                  'Objective',  'Reduction in True Cost', 'Distribution', 'Number of Runs', 'Reduced True Cost',
+                  'Objective', 'Reduction in True Cost', 'Distribution', 'Number of Runs', 'Reduced True Cost',
                   'Increased True Cost', 'Same True Cost', 'Min SIC', 'Max SIC', 'Reduction %']
     average_writer = csv.DictWriter(avg_file, fieldnames=avg_fields)
     average_writer.writeheader()

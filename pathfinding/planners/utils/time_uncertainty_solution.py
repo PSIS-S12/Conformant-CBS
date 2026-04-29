@@ -2,11 +2,12 @@
 This class represents the solutions that are stored in each constraint node. They consist of conformant plans for each
 agent, the total cost range of the solution and the length (i.e the max length between the different paths).
 """
-import math
 import json
+import math
 import os
-from pathfinding.planners.utils.time_uncertainty_plan import TimeUncertaintyPlan
 from collections import defaultdict
+
+from pathfinding.planners.utils.time_uncertainty_plan import TimeUncertaintyPlan
 
 STAY_STILL_COST = 1
 
@@ -129,7 +130,7 @@ class TimeUncertaintySolution:
             path_min_time = last_move[0][0]
 
             if path_min_time < max_min_time:  # The agent is gonna stay at the end at the same position.
-                #if self.paths[agent].path[-1] =
+                # if self.paths[agent].path[-1] =
                 self.paths[agent].path.append(((path_min_time + 1, max_min_time), last_move[1]))
                 new_moves.add((agent, (path_min_time + 1, max_min_time), last_move[1]))
         return new_moves
@@ -140,7 +141,7 @@ class TimeUncertaintySolution:
             os.makedirs(solution_path)
         objective = 'min best case' if min_best_case else 'min worst case'
         file_name = f'map seed {map_seed}_{agent_num} agents_agent seed {agent_seed}_{uncertainty} uncertainty_' \
-            f'{objective}_using pc {use_pc}_using bypass {use_bp}, {map_type}.sol'
+                    f'{objective}_using pc {use_pc}_using bypass {use_bp}, {map_type}.sol'
         path = os.path.join(solution_path, file_name)
 
         with open(path, 'w+') as sol_file:
@@ -158,7 +159,7 @@ class TimeUncertaintySolution:
         """
         objective = 'min best case' if min_best_case else 'min worst case'
         file_name = f'map seed {map_seed}_{agent_num} agents_agent seed {agent_seed}_{uncertainty} uncertainty_' \
-            f'{objective}_using pc {use_pc}_using bypass {use_bp}, {map_type}.sol'
+                    f'{objective}_using pc {use_pc}_using bypass {use_bp}, {map_type}.sol'
         path = os.path.join(folder, map_type, f'{agent_num} agents', file_name)
 
         if not os.path.exists(path):
@@ -191,4 +192,3 @@ class TimeUncertaintySolution:
         except:
             os.remove(path)  # Delete the messed up file
             return None
-

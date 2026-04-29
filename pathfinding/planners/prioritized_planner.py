@@ -2,10 +2,10 @@
 A simple implementation of a prioritized planner that can deal with time uncertainty.
 """
 
-
-from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
-from pathfinding.planners.constraint_A_star import *
 from collections import defaultdict
+
+from pathfinding.planners.constraint_A_star import *
+from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
 
 
 class PrioritizedPlanner:
@@ -66,7 +66,5 @@ class PrioritizedPlanner:
                 t = move[0][1], move[0][1]
                 self.curr_cons[move[1]].append(t)
             else:
-                for tick in range(move[0][0]+1, move[0][1]):
+                for tick in range(move[0][0] + 1, move[0][1]):
                     self.curr_cons[move[1]].append((tick, tick))
-
-

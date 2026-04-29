@@ -127,12 +127,12 @@ class Maze(object):
         OOOOOOOOOOO
         """
 
-        str_matrix = [[1] * (self.width*2+1)
-                      for i in range(self.height*2+1)]
+        str_matrix = [[1] * (self.width * 2 + 1)
+                      for i in range(self.height * 2 + 1)]
 
         for cell in self.cells:
-            x = cell.x*2 + 1
-            y = cell.y*2 + 1
+            x = cell.x * 2 + 1
+            y = cell.y * 2 + 1
             str_matrix[y][x] = 0
             if N not in cell and y > 0:
                 str_matrix[y - 1][x + 0] = 0
@@ -245,8 +245,8 @@ class Maze(object):
         """
         Returns a new random perfect maze with the given sizes.
         """
-        #width = int( (width-1)/2 )
-        #height = int( (height-1)/2 )
+        # width = int( (width-1)/2 )
+        # height = int( (height-1)/2 )
         m = Maze(width, height)
         m.randomize()
         return m

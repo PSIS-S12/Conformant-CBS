@@ -1,10 +1,11 @@
-from pathfinding.planners.constraint_A_star import ConstraintAstar
-from pathfinding.planners.utils.maze import Maze
-import random
-import math
-import os
 import copy
 import json
+import math
+import os
+import random
+
+from pathfinding.planners.constraint_A_star import ConstraintAstar
+from pathfinding.planners.utils.maze import Maze
 
 """
     Rudimentary class that converts a ccbsMap text file into a proper object that can be used by the solver.
@@ -12,7 +13,6 @@ import json
 
 
 class TimeUncertaintyProblem:
-
     """
     map_file_path - the path to the map file
     map - a 2 dimensional array representing the map
@@ -20,6 +20,7 @@ class TimeUncertaintyProblem:
     each tuple is of the form (u,cost,t1,t2) where u is the other vertex that comprises the edge, cost is the
     weight, t1 is the minimal time to traverse the edge and t2 is the maximum time.
     """
+
     def __init__(self, map_file_path=None):
         self.map = []
         self.edges_and_weights = {}
@@ -45,7 +46,7 @@ class TimeUncertaintyProblem:
         """
         new_map = TimeUncertaintyProblem()
 
-        new_map.map = TimeUncertaintyProblem.__generate_map(int(height/2), int(width/2))
+        new_map.map = TimeUncertaintyProblem.__generate_map(int(height / 2), int(width / 2))
         new_map.width = len(new_map.map[0])
         new_map.height = len(new_map.map)
         new_map.generate_edges_and_weights(uncertainty, is_eight_connected)
@@ -80,6 +81,7 @@ class TimeUncertaintyProblem:
     """
     The main function, adds to the ccbs problem the agents, vertices/edges and the weights.
     """
+
     def generate_problem_instance(self, uncertainty=0, eight_connected=False):
         if self.map_file_path[-4:] == ".map":  # It's a moving-ai map
             self.generate_edges_and_weights(uncertainty, eight_connected)
@@ -121,6 +123,7 @@ class TimeUncertaintyProblem:
     return: the last line pointed to in the file.
     Also sets self.map to be a 2 dimensional array representing the map. 0 is empty and 1 is blocked
     """
+
     def __extract_map(self, map_text):
         curr_line = map_text.readline()
         while curr_line[0] != 'V':
@@ -256,7 +259,7 @@ class TimeUncertaintyProblem:
         for agent_id in range(1, agent_num + 1):
             x = random.randint(0, height - 1)
             y = random.randint(0, width - 1)
-            while self.map[x][y] == 1 or (x, y) in start_set or\
+            while self.map[x][y] == 1 or (x, y) in start_set or \
                     (x, y) in goal_set or len(self.edges_and_weights[(x, y)]) == 0:
                 x = random.randint(0, height - 1)
                 y = random.randint(0, width - 1)
@@ -267,7 +270,7 @@ class TimeUncertaintyProblem:
             x = random.randint(0, height - 1)
             y = random.randint(0, width - 1)
 
-            while self.map[x][y] == 1 or (x, y) in start_set or\
+            while self.map[x][y] == 1 or (x, y) in start_set or \
                     (x, y) in goal_set or len(self.edges_and_weights[(x, y)]) == 0:
                 x = random.randint(0, height - 1)
                 y = random.randint(0, width - 1)
@@ -321,16 +324,16 @@ class TimeUncertaintyProblem:
                             row = min(v1[0], v2[0]) * 4
                             col = v1[1] * 2
                             grid[row][col] = '○'
-                            grid[row+1][col] = '⏐'
-                            grid[row+2][col] = f'{self.format_weight(weight)}'
-                            grid[row+3][col] = '⏐'
-                            grid[row+4][col] = '○'
+                            grid[row + 1][col] = '⏐'
+                            grid[row + 2][col] = f'{self.format_weight(weight)}'
+                            grid[row + 3][col] = '⏐'
+                            grid[row + 4][col] = '○'
                         else:
                             row = v1[0] * 4
                             col = min(v1[1], v2[1]) * 2 + 1
-                            grid[row][col-1] = '○'
+                            grid[row][col - 1] = '○'
                             grid[row][col] = f'⎯⎯{self.format_weight(weight)}⎯⎯'
-                            grid[row][col+1] = '○'
+                            grid[row][col + 1] = '○'
 
                 for agent, position in self.start_positions.items():
                     new_row = position[0] * 4
@@ -343,25 +346,26 @@ class TimeUncertaintyProblem:
                     grid[new_row][new_col] = f'G{agent}'
 
                 for rowDex, row in enumerate(grid):
-                    for colDex in range(0, len(row)-1):
+                    for colDex in range(0, len(row) - 1):
                         if row[colDex] == ' ' and colDex > 0:
-                            if row[colDex-1][-1] == ')' and row[colDex+1][0] == '(':
-                                new_space = 6 - int((colDex - 3)/2) % 3
-                                row[colDex] = ' '*new_space
-                            elif row[colDex-1] != ' ' and row[colDex+1] != ' ':  # It's between two vertices or edges
-                                if len(row[colDex-1]) > 1:  # it's a start or end
-                                    row[colDex] = ' '*10
+                            if row[colDex - 1][-1] == ')' and row[colDex + 1][0] == '(':
+                                new_space = 6 - int((colDex - 3) / 2) % 3
+                                row[colDex] = ' ' * new_space
+                            elif row[colDex - 1] != ' ' and row[
+                                colDex + 1] != ' ':  # It's between two vertices or edges
+                                if len(row[colDex - 1]) > 1:  # it's a start or end
+                                    row[colDex] = ' ' * 10
                                 else:
-                                    row[colDex] = ' '*11
-                            elif row[colDex-1] == ' ' and row[colDex+1][0] == '(':
-                                row[colDex] = ' '*8  # between an empty square and a weight
-                            elif row[colDex-1] == ' ' and (row[colDex+1][0] != '('):
-                                row[colDex] = ' '*11
+                                    row[colDex] = ' ' * 11
+                            elif row[colDex - 1] == ' ' and row[colDex + 1][0] == '(':
+                                row[colDex] = ' ' * 8  # between an empty square and a weight
+                            elif row[colDex - 1] == ' ' and (row[colDex + 1][0] != '('):
+                                row[colDex] = ' ' * 11
 
                 for idx, row in enumerate(grid):
                     cell = row[0]
                     if cell[0] != '(':
-                        grid[idx][0] = ' '*3 + cell
+                        grid[idx][0] = ' ' * 3 + cell
 
                 for row in grid:
                     for col in row:
@@ -429,10 +433,12 @@ class TimeUncertaintyProblem:
             kiva_map.edges_and_weights[(row, 0)].append(((row, 1), (1, 10)))
             kiva_map.edges_and_weights[(row, 1)].append(((row, 0), (1, 10)))
 
-            kiva_map.edges_and_weights[(row, kiva_map.width-1)].remove(((row, kiva_map.width-2), (1, 1)))  # right col
-            kiva_map.edges_and_weights[(row, kiva_map.width-2)].remove(((row, kiva_map.width-1), (1, 1)))  # right col
-            kiva_map.edges_and_weights[(row, kiva_map.width-1)].append(((row, kiva_map.width-2), (1, 10)))
-            kiva_map.edges_and_weights[(row, kiva_map.width-2)].append(((row, kiva_map.width-1), (1, 10)))
+            kiva_map.edges_and_weights[(row, kiva_map.width - 1)].remove(
+                ((row, kiva_map.width - 2), (1, 1)))  # right col
+            kiva_map.edges_and_weights[(row, kiva_map.width - 2)].remove(
+                ((row, kiva_map.width - 1), (1, 1)))  # right col
+            kiva_map.edges_and_weights[(row, kiva_map.width - 1)].append(((row, kiva_map.width - 2), (1, 10)))
+            kiva_map.edges_and_weights[(row, kiva_map.width - 2)].append(((row, kiva_map.width - 1), (1, 10)))
 
     @staticmethod
     def generate_warehouse_bottle_neck_map(u=5, warehouse_map_path=None):
@@ -449,17 +455,17 @@ class TimeUncertaintyProblem:
         for row in range(1, k_map.height, 3):
             for col in cols:  # (row, col) is the location of the start of the bottle neck.
 
-                k_map.edges_and_weights[(row-1, col)].remove(((row, col), (1, 1)))  # one above
-                k_map.edges_and_weights[(row+2, col)].remove(((row+1, col), (1, 1)))   # two below
+                k_map.edges_and_weights[(row - 1, col)].remove(((row, col), (1, 1)))  # one above
+                k_map.edges_and_weights[(row + 2, col)].remove(((row + 1, col), (1, 1)))  # two below
                 k_map.edges_and_weights[(row, col)] = []
-                k_map.edges_and_weights[(row+1, col)] = []
+                k_map.edges_and_weights[(row + 1, col)] = []
 
-                k_map.edges_and_weights[(row-1, col)].append(((row, col), (1, 1+u)))  # one above, underneath
-                k_map.edges_and_weights[(row, col)].append(((row-1, col), (1, 1+u)))  # current cell, above
-                k_map.edges_and_weights[(row, col)].append(((row+1, col), (1, 1+u)))  # current cell, underneath
+                k_map.edges_and_weights[(row - 1, col)].append(((row, col), (1, 1 + u)))  # one above, underneath
+                k_map.edges_and_weights[(row, col)].append(((row - 1, col), (1, 1 + u)))  # current cell, above
+                k_map.edges_and_weights[(row, col)].append(((row + 1, col), (1, 1 + u)))  # current cell, underneath
 
-                k_map.edges_and_weights[(row+1, col)].append(((row, col), (1, 1+u)))  # One below, above
-                k_map.edges_and_weights[(row+1, col)].append(((row+2, col), (1, 1+u)))  # One below, underneath
-                k_map.edges_and_weights[(row+2, col)].append(((row+1, col), (1, 1+u)))  # One below, underneath
+                k_map.edges_and_weights[(row + 1, col)].append(((row, col), (1, 1 + u)))  # One below, above
+                k_map.edges_and_weights[(row + 1, col)].append(((row + 2, col), (1, 1 + u)))  # One below, underneath
+                k_map.edges_and_weights[(row + 2, col)].append(((row + 1, col), (1, 1 + u)))  # One below, underneath
 
         return k_map

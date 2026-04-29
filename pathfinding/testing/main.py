@@ -1,6 +1,7 @@
-import sys
 import os
+import sys
 import json
+
 path = os.getcwd().split(os.path.sep)
 path = os.path.sep.join(path[:-1])
 sys.path.append(path)
@@ -8,7 +9,6 @@ proj_path = os.path.abspath(os.getcwd())
 proj_path = proj_path.split('Conformant-CBS')
 proj_path = os.path.join(proj_path[0], 'Conformant-CBS', 'pathfinding', 'testing')
 previous_settings_file_path = os.path.join(proj_path, 'previous_settings.json')
-import pathfinding
 from pathfinding.testing.experiments import *
 
 maps_dict = {
@@ -192,7 +192,6 @@ def get_bp():
 
 
 def get_maps():
-
     legal = False
     while not legal:
         domains = input("Enter desired domains: 1 - open 8x8 map, 2 - circular DAO map, 3 - warehouse map,"

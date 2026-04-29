@@ -1,10 +1,12 @@
 import heapq
+
 from pathfinding.planners.utils.time_error import *
 
 
 class OpenListHeap(object):
     """ A custom heap I made to serve as an open list. This was created because the heapq heaps are a bit cumbersome.
     """
+
     def __init__(self):
         self.internal_heap = []
         self.entry_count = 0
@@ -21,5 +23,6 @@ class OpenListHeap(object):
             return heapq.heappop(self.internal_heap)[4]
         except IndexError:
             print('Thunder Child')
+
     def heapify(self):
         heapq.heapify(self.internal_heap)

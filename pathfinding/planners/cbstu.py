@@ -31,15 +31,14 @@ The goal is to find an optimal solution that guarantees that no two agents will 
 Written by: Tomer Shahar, AI search lab, department of Software & Information Systems Engineering.
 -- August 2018
 """
-import math
 import time
+from collections import defaultdict
 
 from pathfinding.planners.constraint_A_star import ConstraintAstar as Cas
 from pathfinding.planners.utils.constraint_node import ConstraintNode as Cn
+from pathfinding.planners.utils.custom_heap import OpenListHeap
 from pathfinding.planners.utils.time_error import OutOfTimeError
 from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
-from pathfinding.planners.utils.custom_heap import OpenListHeap
-from collections import defaultdict
 
 STAY_STILL_COST = 1
 

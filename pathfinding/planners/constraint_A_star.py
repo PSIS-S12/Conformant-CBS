@@ -5,13 +5,13 @@ a group of constraints.
 Currently a naive implementation of A*
 """
 
-from pathfinding.planners.utils.custom_heap import OpenListHeap
-from pathfinding.planners.utils.time_uncertainty_plan import TimeUncertaintyPlan
-from pathfinding.planners.utils.time_error import OutOfTimeError
-
-import math
-import networkx
 import time
+
+import networkx
+
+from pathfinding.planners.utils.custom_heap import OpenListHeap
+from pathfinding.planners.utils.time_error import OutOfTimeError
+from pathfinding.planners.utils.time_uncertainty_plan import TimeUncertaintyPlan
 
 # The positions of each parameter in the tuple receives from map.edges
 VERTEX_ID = 0
@@ -54,7 +54,7 @@ class ConstraintAstar:
 
             if best_node.current_position == goal_pos and \
                     self.__can_stay(agent, best_node, constraints, suboptimal):
-                #if self.tu_problem.calc_heuristic(start_pos, goal_pos) > 0:
+                # if self.tu_problem.calc_heuristic(start_pos, goal_pos) > 0:
                 #    print(f'Ratio: {len(self.closed_list) / self.tu_problem.calc_heuristic(start_pos, goal_pos)}')
                 return best_node.calc_path(agent)
 
@@ -130,7 +130,7 @@ class ConstraintAstar:
         if best_node.current_position in constraints:
             for con in constraints[best_node.current_position]:
                 if con[0] == agent and best_node.g_val[0] <= con[1][1]:
-                    #print('found goal constraint: agent {} is at goal at time {}, constraint at time {}'.format(agent, best_node.g_val[0], con[1][1]))
+                    # print('found goal constraint: agent {} is at goal at time {}, constraint at time {}'.format(agent, best_node.g_val[0], con[1][1]))
                     return False  # A constraint was found
 
         return True
@@ -219,8 +219,10 @@ class SingleAgentNode:
         still_time = (self.g_val[0] + STAY_STILL_COST, self.g_val[1] + STAY_STILL_COST)  # Add the option of not moving.
         if self.legal_move(agent, self.current_position, still_time, constraints, pos_cons, suboptimal):
             if len(conflict_table) > 0:
-                confs_created = self.confs_created + self.count_conflicts(agent, conflict_table, (still_time[1], still_time[1]),
-                                                                          (self.current_position, self.current_position))
+                confs_created = self.confs_created + self.count_conflicts(agent, conflict_table,
+                                                                          (still_time[1], still_time[1]),
+                                                                          (self.current_position,
+                                                                           self.current_position))
                 stay_still = (self.current_position, still_time, confs_created)
             else:
                 stay_still = (self.current_position, still_time, 0)

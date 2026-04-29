@@ -3,12 +3,11 @@ An online variant of cbstu. During plan execution, the agents receive informatio
 agent's current state. This will allow to re-plan with additional information, hopefully leading to higher quality
 results in terms of Sum of Costs.
 """
-import copy
-import time
 from collections import defaultdict
+
 from pathfinding.planners.cbstu import CBSTUPlanner
-from pathfinding.planners.online_planner import *
 from pathfinding.planners.constraint_A_star import ConstraintAstar
+from pathfinding.planners.online_planner import *
 from pathfinding.planners.utils.tu_problem import TimeUncertaintyProblem
 
 
@@ -98,8 +97,8 @@ class OnlineCBSTU(OnlinePlanner):
 
             self.offline_planner.tu_problem.start_positions = sensing_agents
             new_plans = self.offline_planner.find_solution(existing_cons=new_cons,
-                                                                 curr_time=(curr_time, curr_time),
-                                                                 time_lim=time_limit)
+                                                           curr_time=(curr_time, curr_time),
+                                                           time_lim=time_limit)
             for agent, path in new_plans.paths.items():
                 self.current_plan.paths[agent] = path
             self.current_plan.add_stationary_moves({agent: self.current_plan.paths[agent] for agent in sensing_agents})
@@ -221,7 +220,7 @@ class OnlineCBSTU(OnlinePlanner):
         pos_cons = defaultdict(set)
         for agent, path in self.initial_plan.paths.items():
             for move in path.path:
-                pos_cons[agent].update(set([(agent, move[1], i) for i in range(move[0][0], move[0][1]+1)]))
+                pos_cons[agent].update(set([(agent, move[1], i) for i in range(move[0][0], move[0][1] + 1)]))
 
         return pos_cons
 

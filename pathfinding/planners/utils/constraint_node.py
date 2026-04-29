@@ -1,8 +1,9 @@
 import copy
 import math
 from collections import defaultdict
-from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
+
 from pathfinding.planners.constraint_A_star import ConstraintAstar as Cas
+from pathfinding.planners.utils.time_uncertainty_solution import TimeUncertaintySolution
 
 
 class ConstraintNode:
@@ -24,7 +25,7 @@ class ConstraintNode:
             self.conf_num = math.inf
             self.copy_solution(parent)
             self.conflict_table = {agent: moves for agent, moves in parent.conflict_table.items()}
-            #self.conflict_table = copy.deepcopy(parent.conflict_table)
+            # self.conflict_table = copy.deepcopy(parent.conflict_table)
         else:
             self.constraints = defaultdict(list)
             self.sol = TimeUncertaintySolution()
@@ -147,7 +148,7 @@ class ConstraintNode:
                     continue
                 for occupy in visited_nodes[move_i[1]]:  # Iterate over the times agents have been at this node
                     if occupy[0] != agent_i and Cas.overlapping(interval, occupy[1]):  # There's a conflict.
-                        #t_range = max(occupy[1][0], interval[0]), min(occupy[1][1], interval[1])
+                        # t_range = max(occupy[1][0], interval[0]), min(occupy[1][1], interval[1])
                         cn[move_i[1]].append((agent_i, occupy[0], interval, occupy[1]))
                         count += 1  # (t_range[1] - t_range[0] + 1) ToDo: Set a correct range for this AND EDGES
 
@@ -183,8 +184,8 @@ class ConstraintNode:
                         if pres[2] != move[2] and not Cas.overlapping(move[0], pres[1]):  # Opposite directions
                             continue  # no conflict
                         if pres[2] == move[2]:  # Trickier conflict option, same direction
-                            occ_i = move[0][0]+1, move[0][1]-1  # Actual occupation times
-                            occ_j = pres[1][0]+1, pres[1][1]-1
+                            occ_i = move[0][0] + 1, move[0][1] - 1  # Actual occupation times
+                            occ_j = pres[1][0] + 1, pres[1][1] - 1
                             if not Cas.overlapping(occ_i, occ_j):
                                 continue
                         cn[edge].append((pres[0], agent, pres[1], move[0], pres[2], move[2]))
@@ -250,7 +251,7 @@ class ConstraintNode:
         for old_move in old_plan.path:  # Iterate over the old moves and delete the conflicts they led to
             for conflict in self.parent.conflicts[old_move[1]]:  # ToDo: Are there more conflicts or moves in a path?
                 if old_plan.agent in conflict:
-                    #conf_time = min(conflict[2][1], conflict[3][1]) - max(conflict[2][0], conflict[3][0]) + 1
+                    # conf_time = min(conflict[2][1], conflict[3][1]) - max(conflict[2][0], conflict[3][0]) + 1
                     if conflict in self.conflicts[old_move[1]]:
                         self.conf_num -= 1  # conf_time
                         self.conflicts[old_move[1]].remove(conflict)

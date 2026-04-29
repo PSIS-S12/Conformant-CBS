@@ -2,20 +2,19 @@
 Unit tests for Conformant-CBS
 """
 import copy
+import random
+import unittest
 
-from pathfinding.planners.utils.constraint_node import ConstraintNode
-from pathfinding.planners.utils.tu_problem import TimeUncertaintyProblem
 from pathfinding.planners.cbstu import *
 from pathfinding.planners.constraint_A_star import *
-from pathfinding.planners.operator_decomposition_a_star import *
-from pathfinding.planners.utils.time_error import *
-from pathfinding.simulator import MAPFSimulator
 from pathfinding.planners.online_cbstu import OnlineCBSTU
-from pathfinding.planners.prioritized_planner import PrioritizedPlanner
 from pathfinding.planners.online_prioritized_planner import OnlinePrioritizedPlanner
-
-import unittest
-import random
+from pathfinding.planners.operator_decomposition_a_star import *
+from pathfinding.planners.prioritized_planner import PrioritizedPlanner
+from pathfinding.planners.utils.constraint_node import ConstraintNode
+from pathfinding.planners.utils.time_error import *
+from pathfinding.planners.utils.tu_problem import TimeUncertaintyProblem
+from pathfinding.simulator import MAPFSimulator
 
 
 class TestMapReader(unittest.TestCase):
@@ -472,7 +471,6 @@ class TestCcbsPlanner(unittest.TestCase):
         ccbs_planner = CBSTUPlanner(self.conf_problem)
         solution = ccbs_planner.find_solution(time_lim=1, soc=False, use_pc=False, use_bp=True)
         self.assertEqual(solution.cost, (20, 20))  # both agents moves since it's makespan
-
 
     def test_more_complex_4_connected_map(self):
         complex_conf_prob = TimeUncertaintyProblem()
@@ -1046,6 +1044,7 @@ class TestOnlineCBSTU(unittest.TestCase):
     """
     Tests the online cbstu and simulator.
     """
+
     def test_trivial_no_uncertainty_problem(self):
         example_map = TimeUncertaintyProblem('test_map.map')
         example_map.generate_edges_and_weights(uncertainty=0)
@@ -1476,7 +1475,6 @@ class TestPrioritizedPlanner(unittest.TestCase):
         priority_planner = PrioritizedPlanner(circular_map)
         sol = priority_planner.find_solution(min_best_case=mbc, time_limit=30, to_print=False)
         self.assertNotEqual(sol.cost, (math.inf, math.inf))
-
 
 
 class TestOnlinePrioritizedPlanner(unittest.TestCase):

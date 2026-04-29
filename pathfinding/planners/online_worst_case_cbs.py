@@ -5,8 +5,9 @@ and sensing, an agent waits the appropriate number of time steps in order to syn
 Note that this algorithm does not require any communication, but it does require full sensing.
 """
 
-from pathfinding.planners.cbstu import CBSTUPlanner
 import copy
+
+from pathfinding.planners.cbstu import CBSTUPlanner
 
 
 class OnlinePessimisticCBS:
@@ -33,7 +34,7 @@ class OnlinePessimisticCBS:
         self.init_sol = cbstu_planner.find_solution(min_best_case, time_limit, soc)
         self.curr_sol = copy.deepcopy(self.init_sol)
         self.current_state = {'time': 0,
-                              'cost': 0,                    # Agents that are at a vertex
+                              'cost': 0,  # Agents that are at a vertex
                               'at_vertex': copy.deepcopy(self.tu_problem.start_positions),
                               'in_transition': {}}  # Agents that are transitioning.
         return self.init_sol
@@ -54,5 +55,3 @@ class OnlinePessimisticCBS:
                 for i in range(time_to_wait):
                     wait_action = ()
                     new_plan = self.curr_sol.paths[agent].path.push()
-
-

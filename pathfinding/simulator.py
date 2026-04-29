@@ -4,13 +4,12 @@ planner with new information gained. The simulator imitates this by giving each 
 time. This occurs when the agent is at a node (waiting or having just arrived).
 """
 
-from pathfinding.planners.utils.time_uncertainty_solution import *
+import random
+
 from pathfinding.planners.online_cbstu import *
 from pathfinding.planners.online_worst_case_cbs import OnlinePessimisticCBS
 from pathfinding.planners.prioritized_planner import *
 from pathfinding.planners.utils.time_error import OutOfTimeError
-import time
-import random
 
 
 class MAPFSimulator:
@@ -43,9 +42,9 @@ class MAPFSimulator:
 
         for agent in self.tu_problem.start_positions:
             self.final_solution.paths[agent] = TimeUncertaintyPlan(
-                                                agent_id=agent,
-                                                path=[((0, 0), self.tu_problem.start_positions[agent])],
-                                                cost=(0, 0))
+                agent_id=agent,
+                path=[((0, 0), self.tu_problem.start_positions[agent])],
+                cost=(0, 0))
 
     def generate_real_weights(self, distribution='uniform'):
         """
@@ -113,7 +112,7 @@ class MAPFSimulator:
         self.final_solution.time_to_solve = time.time() - start_time + self.online_planner.initial_plan.time_to_solve
         self.final_solution.nodes_generated = self.online_planner.initial_plan.nodes_generated
         self.final_solution.compute_solution_cost()
-        #self.print_final_solution()
+        # self.print_final_solution()
         return self.final_solution
 
     def simulate_sensing_and_broadcast(self):
