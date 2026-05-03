@@ -89,7 +89,7 @@ class Experiments:
         circular_map.generate_problem_instance(self.uncertainty)
         print(f"--- STARTED CIRCULAR MAP | SEED: {seed}--- | UNCERTAINTY: {self.uncertainty} ---")
         self.run_and_log_same_instance_experiment(circular_map, results_file, agent_num, rep_num, seed)
-        
+
     def run_psis_experiment_map(self, rep_num, agent_num):
         results_file = self.file_prefix + 'psis_experiment_map_results.csv'
         map_file = '../maps/psis_experiment_map.map'
@@ -308,8 +308,11 @@ class Experiments:
                             'Communication,'
                             'Min SIC,'
                             'Max SIC,'
-                            'True SIC\n'
-                            )
+                            'True SIC,'
+                            'Makespan,'
+                            'Throughput,'
+                            'Number of Collisions,'
+                            'Planner Time\n')
 
         success = 0
         random.seed(initial_agent_seed)
@@ -359,6 +362,59 @@ class Experiments:
                     init_sol.save(self.agents_num, self.uncertainty, map_type, agent_seed, map_seed, self.min_best_case,
                                   use_pc, use_bp, sol_folder)
 
+                # PSIS metrics
+                # Makespan: maximum finish time among agents
+                makespan = 0
+                num_agents_reached = 0
+                for agent, path in online_sol.paths.items():
+                    if not path.path:
+                        continue
+                    last_presence = path.path[-1]
+                    finish_time = last_presence[0][1]
+                    if finish_time > makespan:
+                        makespan = finish_time
+                    if last_presence[1] == tu_problem.goal_positions[agent]:
+                        num_agents_reached += 1
+
+                # Throughput: tasks completed per time unit
+                throughput = (num_agents_reached / makespan) if makespan > 0 else float(num_agents_reached)
+
+                # Planner time: total planner computation time
+                planner_time = getattr(online_sol, 'time_to_solve', -1)
+
+                # Number of collisions
+                collisions = 0
+                try:
+                    tuples = online_sol.tuple_solution
+                    agents_list = list(tuples.keys())
+                    for a in range(len(agents_list)):
+                        a1 = agents_list[a]
+                        for b in range(a + 1, len(agents_list)):
+                            a2 = agents_list[b]
+                            found = False
+                            for move1 in tuples[a1]:
+                                t1, edge1 = move1[0], move1[1]
+                                s1, e1 = t1[0], t1[1]
+                                for move2 in tuples[a2]:
+                                    t2, edge2 = move2[0], move2[1]
+                                    s2, e2 = t2[0], t2[1]
+                                    # time overlap
+                                    if s1 < e2 and s2 < e1:
+                                        # vertex collision (stationary or both at same vertex)
+                                        if edge1 == edge2 and edge1[0] == edge1[1]:
+                                            collisions += 1
+                                            found = True
+                                            break
+                                        # edge collision (same edge, movement present)
+                                        if edge1 == edge2 and edge1[0] != edge1[1]:
+                                            collisions += 1
+                                            found = True
+                                            break
+                                if found:
+                                    break
+                except Exception:
+                    collisions = -1
+
             except OutOfTimeError:  # Simulator threw a timeout
                 if loaded_sol:
                     init_sol = loaded_sol
@@ -378,6 +434,10 @@ class Experiments:
                 min_sic = -1
                 max_sic = -1
                 true_sic = -1
+                makespan = -1
+                throughput = -1
+                collisions = -1
+                planner_time = -1
 
             with open(temp_path, 'a') as temp_map_result_file:
                 objective = 'Min Best Case' if self.min_best_case else 'Min Worst Case'
@@ -406,7 +466,11 @@ class Experiments:
                           f'{communication},' \
                           f'{min_sic},' \
                           f'{max_sic},' \
-                          f'{true_sic}\n'
+                          f'{true_sic},' \
+                          f'{makespan},' \
+                          f'{throughput},' \
+                          f'{collisions},' \
+                          f'{planner_time}\n'
                 temp_map_result_file.write(results)
 
         copyfile(temp_path, final_results_path)
