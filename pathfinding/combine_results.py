@@ -24,6 +24,8 @@ def get_map_type(file_name):
             return "Bottle Neck Obstacle Map"
         else:
             return 'Obstacle Map'
+    if 'psis' in map_name:
+        return "PSIS Experiment Map"
     else:
         return 'unknown'
 

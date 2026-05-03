@@ -17,7 +17,8 @@ maps_dict = {
     3: 'warehouse_map',
     4: 'maze_map',
     5: 'obstacle_map',
-    6: 'obstacle_bottle_neck_map'
+    6: 'obstacle_bottle_neck_map',
+    7: 'psis_experiment_map'
 }
 
 distribution_dict = {1: 'max', 2: 'uni', 3: 'min'}
@@ -195,14 +196,14 @@ def get_maps():
     legal = False
     while not legal:
         domains = input("Enter desired domains: 1 - open 8x8 map, 2 - circular DAO map, 3 - warehouse map,"
-                        " 4 - maze map, 5 - obstacle map, 6 - bottle neck map: ")
+                        " 4 - maze map, 5 - obstacle map, 6 - bottle neck map, 7 - psis experiment map: ")
         domains = domains.replace(' ', '').split(',')
-        if len(domains) < 1 or len(domains) > 6:
+        if len(domains) < 1 or len(domains) > 7:
             print('Invalid input.')
             continue
         domains = [int(v) for v in domains]
         for val in domains:
-            if val < 1 or val > 6:
+            if val < 1 or val > 7:
                 print('Invalid input.')
                 continue
         temp_dist = []
