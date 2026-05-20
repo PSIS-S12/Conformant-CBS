@@ -19,6 +19,7 @@ MAP_FILES = {
     'warehouse_map': f'{os.path.join(maps_path, "kiva.map")}',
     'maze_map': f'{os.path.join(maps_path, "maze512-2-0.map")}',
     'psis_experiment_map': f'{os.path.join(maps_path, "psis_experiment_map.map")}',
+    'psis_experiment_map_160': f'{os.path.join(maps_path, "psis_experiment_map_160.map")}',
 }
 
 map_seed = 96372106
@@ -99,6 +100,16 @@ class Experiments:
         psis_experiment_map.generate_problem_instance(self.uncertainty)
         print(f"--- STARTED PSIS EXPERIMENT MAP | SEED: {seed}--- | UNCERTAINTY: {self.uncertainty} ---")
         self.run_and_log_same_instance_experiment(psis_experiment_map, results_file, agent_num, rep_num, seed)
+
+    def run_psis_experiment_map_160(self, rep_num, agent_num):
+        results_file = self.file_prefix + 'psis_experiment_map_160_results.csv'
+        map_file = '../maps/psis_experiment_map_160.map'
+        seed = 12345678
+        random.seed(seed)
+        psis_experiment_map_160 = TimeUncertaintyProblem(map_file)
+        psis_experiment_map_160.generate_problem_instance(self.uncertainty)
+        print(f"--- STARTED PSIS EXPERIMENT MAP (160x160) | SEED: {seed}--- | UNCERTAINTY: {self.uncertainty} ---")
+        self.run_and_log_same_instance_experiment(psis_experiment_map_160, results_file, agent_num, rep_num, seed)
 
     def run_and_log_same_instance_experiment(self, conf_problem, results_file, agent_num, rep_num, map_seed,
                                              use_cat=True):
@@ -246,6 +257,7 @@ class Experiments:
         self.run_circular_map(rep_num, num_of_agents)
         self.run_corridor_map(rep_num, num_of_agents, use_cat)
         self.run_psis_experiment_map(rep_num, num_of_agents)
+        self.run_psis_experiment_map_160(rep_num, num_of_agents)
 
     def run_online_experiments(self, agent_num, sense, commy, dist, use_pc, use_bp, maps):
 
